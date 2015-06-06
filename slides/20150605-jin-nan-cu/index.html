@@ -1,0 +1,181 @@
+<html>
+<head>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="lib/talkie.min.css">
+  <link rel="stylesheet" href="lib/talkie-default.min.css">
+</head>
+<body>
+
+<!-- put your slides -->
+
+<script layout="cover" invert type="text/x-markdown"
+  backface="images/cyta_infra.png" backface-filter="brightness(.4)">
+# サイタのサービス環境について
+
+2015/6/5 神南エンジニアリング勉強会 Vol.1
+TOMITA,Yosuke (Coach United Inc.)
+</script>
+
+<script layout type="text/x-markdown">
+* サービス概要
+* サイタの稼働環境の話
+* Twilioの話
+* SendGridの話
+</script>
+
+<script layout type="text/x-markdown">
+# サービス概要
+</script>
+
+<script layout type="text/x-markdown">
+### PHP で習い事のサービスを作っています
+
+# ![サイタ](images/cyta_top.png)
+</script>
+
+<script layout type="text/x-markdown">
+# ![サイタで検索](images/serp.png)
+</script>
+
+<script layout type="text/x-markdown">
+# ![申込画面](images/lf.png)
+</script>
+
+<script layout type="text/x-markdown">
+### 受講生とコーチがいっぱいレッスンできるようにするのが事務局の仕事
+
+# ![サイタ](images/cyta_flow.png)
+</script>
+
+<script layout type="text/x-markdown">
+# サイタの稼働環境の話
+</script>
+
+<script layout type="text/x-markdown">
+### 本番環境はAWSいろいろ + 外部サービス
+
+# ![サイタ](images/cyta_infra.png)
+</script>
+
+<script layout type="text/x-markdown">
+# Twilioの話
+</script>
+
+<script layout type="text/x-markdown">
+### 「待ち合わせ専用ダイヤル」始めました
+
+# ![サイタ](images/twilio_meeting.jpg)
+</script>
+
+<script layout type="text/x-markdown">
+# ![サイタ](images/twilio.png)
+</script>
+
+<script layout type="text/x-markdown">
+### 電話着信時のPOST先を指定
+
+# ![サイタ](images/twilio_config.png)
+</script>
+
+<script layout type="text/x-markdown">
+### POST受付時のレスポンスを作成
+
+# ![サイタ](images/twilio_response.png)
+</script>
+
+<script layout type="text/x-markdown">
+### 詳しくはブログにて
+
+# ![サイタ](images/twilio_blog.png)
+#### http://tech.cunited.jp/post/119506833250/twilio
+</script>
+
+<script layout type="text/x-markdown">
+# SendGridの話
+</script>
+
+<script layout type="text/x-markdown">
+### MTA外部化を見送ったのが昨年9月
+
+# ![サイタ](images/mta_blog.png)
+#### http://tech.cunited.jp/post/96318734265/ses-sendgrid-mandrill-mailgun
+</script>
+
+<script layout type="text/x-markdown">
+# その後
+* 4月頃 SendGridマニュアルごにょごにょ読む
+* 4月末 SendGrid移行するぞ(確信)
+* 5/12 アカウント作成(日本の)
+* 5/13 SendGrid担当者さんくる
+* 5/14- いろいろ作りこみ
+* 5/25 SendGrid切り替え
+</script>
+
+<script layout type="text/x-markdown">
+# SendGrid以前
+* 個別のReturn-Path仕込む
+* Bounce受け取ってparse
+* 事務局通知
+* アドレスクリーニング
+</script>
+
+<script layout type="text/x-markdown">
+### 詳しくはブログにて
+
+# ![サイタ](images/bounce_blog.png)
+#### http://tech.cunited.jp/post/103096969015/cyta-jp-bounce
+</script>
+
+<script layout type="text/x-markdown">
+# SendGrid導入後
+* X-SMTPAPIに個別のunique_args仕込む
+* Event受け取ってparse
+* 事務局通知
+* アドレスクリーニング
+</script>
+
+<script layout type="text/x-markdown">
+### Eventの送信先を設定
+
+# ![サイタ](images/sendgrid_config.png)
+</script>
+
+<script layout type="text/x-markdown">
+### Eventの受け取り処理
+
+```php
+$json = file_get_contents("php://input");
+$parsed = json_decode($json, true);
+            
+try {
+    foreach ($parsed as $n) {
+        SendGridEventHandler::handle($n);
+    }   
+    // 全て正常に終わった時のみ200応答.
+    $status = 200;
+} catch (Exception $e) {
+    // 500応答を返し、SendGridからの再送を期待する.
+    $status = 500;
+}
+
+return $status;
+```
+</script>
+
+<script layout type="text/x-markdown">
+## 詳しくはブログかきます
+</script>
+
+<script layout type="text/x-markdown">
+## エンジニア募集中ですよ
+</script>
+
+<script layout type="text/x-markdown">
+## ご静聴ありがとうございました
+</script>
+
+<script src="lib/highlight.min.js"></script>
+<script src="lib/talkie.min.js"></script>
+<script>Talkie();</script>
+</body>
+</html>
